@@ -31,65 +31,78 @@ fun GeoQuizScreen() {
     val question = questions[currentIndex]
     val isLast = currentIndex == questions.lastIndex
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Text(
-            "Вопрос ${currentIndex + 1} из ${questions.size}",
-            fontSize = 14.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+    val snackbarHostState = remember { SnackbarHostState() }
 
-        Text(
-            question.text,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
+    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(
+                "Вопрос ${currentIndex + 1} из ${questions.size}",
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                question.text,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        if (!answered) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Button(
-                    onClick = {
-                        if (question.answer) correctCount++
-                        answered = true
-                    },
-                    modifier = Modifier.weight(1f)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (!answered) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Text("True")
-                }
-                Button(
-                    onClick = {
-                        if (!question.answer) correctCount++
-                        answered = true
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("False")
+                    Button(
+                        onClick = {
+                            if (question.answer) correctCount++
+                            answered = true
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("True")
+                    }
+                    Button(
+                        onClick = {
+                            if (!question.answer) correctCount++
+                            answered = true
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("False")
+                    }
                 }
             }
-        }
 
-        if (!(answered && isLast)) {
-            Button(
-                onClick = {
-                    currentIndex++
-                    answered = false
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = answered
-            ) {
-                Text("Next")
+            if (!(answered && isLast)) {
+                Button(
+                    onClick = {
+                        currentIndex++
+                        answered = false
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = answered
+                ) {
+                    Text("Next")
+                }
+            }
+
+            LaunchedEffect(answered, isLast) {
+                if (answered && isLast) {
+                    snackbarHostState.showSnackbar(
+                        "Результат: $correctCount из ${questions.size}"
+                    )
+                }
             }
         }
     }
