@@ -25,6 +25,8 @@ val questions = listOf(
 @Composable
 fun GeoQuizScreen() {
     var currentIndex by remember { mutableStateOf(0) }
+    var correctCount by remember { mutableStateOf(0) }
+    var answered by remember { mutableStateOf(false) }
 
     val question = questions[currentIndex]
 
@@ -51,21 +53,29 @@ fun GeoQuizScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Button(
-                onClick = { },
-                modifier = Modifier.weight(1f)
+        if (!answered) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text("True")
-            }
-            Button(
-                onClick = { },
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("False")
+                Button(
+                    onClick = {
+                        if (question.answer) correctCount++
+                        answered = true
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("True")
+                }
+                Button(
+                    onClick = {
+                        if (!question.answer) correctCount++
+                        answered = true
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("False")
+                }
             }
         }
     }
