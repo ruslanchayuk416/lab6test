@@ -48,6 +48,26 @@ fun GeoQuizScreen() {
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Button(
+                onClick = { },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("True")
+            }
+            Button(
+                onClick = { },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("False")
+            }
+        }
     }
 }
 
